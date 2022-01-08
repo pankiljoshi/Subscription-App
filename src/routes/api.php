@@ -14,7 +14,9 @@ use App\Http\Controllers\WebsiteController;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-
+Route::get('', function () {
+    return response(['version' => '0.1']);
+});
 Route::prefix('websites')->group(function () {
     Route::prefix('{website_id}')->group(function () {
         Route::post('posts', [PostController::class, 'create']);
