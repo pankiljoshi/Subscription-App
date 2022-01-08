@@ -1,0 +1,40 @@
+version: "3"
+services:
+  subscription-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        UID: 1000
+        PORT: 80
+    container_name: subscription-app
+    ports:
+      - 8003:80
+    volumes:
+      - ./src:/var/www/
+    depends_on:
+      - subscription-app-mysql-db
+    environment:
+      DATABASE_URL: mysql://mysql:docker@subscription-app-mysql-db/subscription_app
+      DEBUG: 'true'
+  subscription-app-mysql-db:
+    image: mariadb:10.6.5
+    container_name: subscription-app-mysql-db    
+    restart: always
+    environment:
+      - MYSQL_DATABASE=subscription_app
+      - MYSQL_ROOT_PASSWORD=docker
+      - MYSQL_USER=mysql
+      - MYSQL_PASSWORD=docker
+    ports:
+      - 3309:3306
+    volumes:
+      - db_data:/var/lib/mysql
+  adminer:
+    image: adminer
+    container_name: subscription-app-adminer  
+    restart: always
+    ports:
+      - 8004:8080
+volumes:
+  db_data: {}
